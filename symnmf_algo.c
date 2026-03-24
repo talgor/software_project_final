@@ -14,15 +14,28 @@ double* compute_symnmf(double* W, double* H,  int n, int k){
     */
 }
 
-void update_H(double* old_H, double* new_H, double* W, int n, int k){
+void update_H(double* old_H, double* new_H, double* W, int n, int k, double* numerator, double* denominator, double* transposed, double* denominator_part){
     /* expected input: 
     old_H - an n*k array representing a matrix of nXk values with the values for H before the update
     new_H - an n*k array, assigned, might be filled with values we will override
     W - an n*n array representing the nXn graph Laplacian matrix
     n - number of points to cluster
     k - number of clusters to generate
+    numerator, denominator - n*k arrays used for inside calculations, passed to minimize memory allocation and freeing
+    transposed, denominator_part - k*n, k*k arrays used for inside calculations, passed to minimize memory allocation and freeing
     output:
     no output, but after the function is called new_H will contain the values of old_H after one update as defined in the algorithm*/
+    int i = 0, j;
+    double beta = 0.5;
+    transpose(old_H, transposed, n, k); /*filling "transposed" with old_H trasnposed*/
+    mult_matrix(W, old_H, numerator, n, k, n); /*filling "numerator" with W*old_H*/
+    mult_matrix(transposed, old_H, denominator_part, k, k, n); /*filling "denominator_part" with transposed*old_H*/
+    mult_matrix(old_H, denominator_part, denominator, n, k, k);
+    for (; i < n ; i++){
+        for (j = 0; j < k; j++){
+            new_H[i*k + j] = old_H[i*k + j] * (1 - beta + beta * numerator[i*k + j] / denominator[i*k + j]);
+        }
+    }
 }
 
 double* compute_sym(double* datapoints, int n, int d){
@@ -33,13 +46,14 @@ double* compute_sym(double* datapoints, int n, int d){
     output:
     an n*n array representing the nXn similarity matrix A, as defined in the symnmf algorithm
     pay attention! the function allocates memory, the caller is resposible of freeing it
-*/
+    */
     double* sym_matrix = malloc(sizeof(double)*n*n);
     if (sym_matrix == NULL) {
         printf("An Error Has Occurred\n");
         free(datapoints);
         /*is this all there is to free know? i dont know :(*/
         exit(1); 
+    }
     int i, j;
     double sym_calculus;
     /*filling the upper right triangle by calculation, the diagonal with 0 and the lower left by mirroring*/
@@ -108,3 +122,6 @@ int main(int argc, char **argv)
         if (c == '\n')
 }
 }
+
+
+/*after the function compute_sym, free the datapoints. in general, track the mallocs and the frees*/

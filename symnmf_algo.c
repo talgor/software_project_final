@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 
 
 double* compute_symnmf(double* W, double* H,  int n, int k){
@@ -33,6 +34,27 @@ double* compute_sym(double* datapoints, int n, int d){
     an n*n array representing the nXn similarity matrix A, as defined in the symnmf algorithm
     pay attention! the function allocates memory, the caller is resposible of freeing it
 */
+    double* sym_matrix = malloc(sizeof(double)*n*n);
+    if (sym_matrix == NULL) {
+        printf("An Error Has Occurred\n");
+        free(datapoints);
+        /*is this all there is to free know? i dont know :(*/
+        exit(1); 
+    int i, j;
+    double sym_calculus;
+    /*filling the upper right triangle by calculation, the diagonal with 0 and the lower left by mirroring*/
+    for (i = 0; i < n; i++){
+        for (j = 0; j < i; j++){
+            sym_matrix[i*n + j] = sym_matrix[j*n + i];
+        }
+        sym_matrix[i*n + j] = 0.0;
+        for (j++ ; j < n; j++){
+            sym_calculus = squared_euclidean_distance(&datapoints[i*d], &datapoints[j*d], d);
+            sym_calculus = exp(-sym_calculus/2);
+            sym_matrix[i*n + j] = sym_calculus;
+        }
+    }
+    return sym_matrix;
 }
 
 double* compute_ddg(double* sym_matrix, int n){

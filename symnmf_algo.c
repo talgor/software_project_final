@@ -2,7 +2,7 @@
 #include <math.h>
 
 
-double* compute_symnmf(double* W, double* H,  int n, int k){
+double* compute_symnmf(double* W, double* H,  int n, int k, int max_iter){
     /*expected input: 
     W - an n*n array representing the nXn graph Laplacian matrix
     H - an n*k array representing a randomized matrix of nXk values in the interval [0, 2*sqrt(m/k)] where m is the average if all entries of W
@@ -19,6 +19,22 @@ double* compute_symnmf(double* W, double* H,  int n, int k){
    double* denominator = malloc(sizeof(double)*n*k);
    double* transposed = malloc(sizeof(double)*k*n);
    double* denominator_part = malloc(sizeof(double)*k*k);
+   int i = 0;
+   double eps = exp(-4);
+   double diff = eps + 2;
+   /*check all the mallocs*/
+   while (i < max_iter && diff >= eps){
+        update_H(old_H, new_H, W, n, k, numerator, denominator, transposed, denominator_part);
+        diff = squared_euclidean_distance(old_H, new_H, n * k);
+        old_H = new_H;
+   }
+   free(old_H);
+   free(new_H);
+   free(numerator);
+   free(denominator);
+   free(transposed);
+   free(denominator_part);
+   free(W);
 }
 
 void update_H(double* old_H, double* new_H, double* W, int n, int k, double* numerator, double* denominator, double* transposed, double* denominator_part){

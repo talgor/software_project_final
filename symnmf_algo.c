@@ -175,14 +175,24 @@ double* compute_norm(double* sym_matrix, int n){
     return graph_laplacian;
 }
 
+double* read_datapoints_from_file(char* filename, int* out_n, int* out_d){
+    /*expected input:
+    filename - name of txt file that containes datapoints
+    out_n, out_d - int pointers to be filled with n and d
+    output:
+    an n*d array of soubles representing the datapoints red from the file,
+    out_n and out_d will contain n and d as seen in the file*/
+        while (scanf("%lf%c", &n, &c) == 2)
+    {
+        if (c == '\n')
+}
+}
+
 
 int main(int argc, char **argv)
 {
     int k, d, n;
-    while (scanf("%lf%c", &n, &c) == 2)
-    {
-        if (c == '\n')
-}
+
 }
 
 

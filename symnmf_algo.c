@@ -175,17 +175,40 @@ double* compute_norm(double* sym_matrix, int n){
     return graph_laplacian;
 }
 
-double* read_datapoints_from_file(char* filename, int* out_n, int* out_d){
+void extract_n_d(FILE* ifp, int* out_n, int* out_d){
+
+}
+
+
+
+
+
+
+double* read_datapoints_from_file(FILE* ifp, int n, int d){
+        while (scanf("%lf%c", &n, &c) == 2)
+    {
+        if (c == '\n')
+}
+}
+
+
+double* read_file_env(char* filename, int* out_n, int* out_d){
     /*expected input:
     filename - name of txt file that containes datapoints
     out_n, out_d - int pointers to be filled with n and d
     output:
     an n*d array of soubles representing the datapoints red from the file,
     out_n and out_d will contain n and d as seen in the file*/
-        while (scanf("%lf%c", &n, &c) == 2)
-    {
-        if (c == '\n')
-}
+    FILE* ifp = fopen(filename, "r");
+    double* datapoints;
+    if (ifp == NULL){
+        printf("An Error Has Occurred\n");
+        exit(1);
+    }
+    extract_n_d(ifp, out_n, out_d);
+    datapoints = read_datapoints_from_file(ifp, *out_n, *out_d);
+    fclose(ifp);
+    return datapoints;
 }
 
 

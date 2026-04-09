@@ -185,10 +185,19 @@ void extract_n_d(FILE* ifp, int* out_n, int* out_d){
 
 
 double* read_datapoints_from_file(FILE* ifp, int n, int d){
-        while (scanf("%lf%c", &n, &c) == 2)
-    {
-        if (c == '\n')
-}
+    int i, j, c;
+    float f;
+    double* datapoints = malloc(sizeof(double)*n*d);
+    if (datapoints == NULL) {
+        printf("An Error Has Occurred\n");
+        /*need to close the file*/
+        exit(1); 
+    }  
+    for (i = 0; i < n*d ; i++){
+        scanf("%f%c", &f, &c);
+        datapoints[i] = f;
+    }
+    return datapoints;
 }
 
 

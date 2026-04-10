@@ -176,28 +176,45 @@ double* compute_norm(double* sym_matrix, int n){
 }
 
 void extract_n_d(FILE* ifp, int* out_n, int* out_d){
-
+    /* expected input:
+    ifp - an open file
+    *out_d, *out_n - int pointers
+    expected output:
+    the value in *out_d is the number of commas in the files first line, 
+    the value in *out_n is the number of lines in the file */
+    int d = 1;
+    int c,  n = 1; /*the first line is not counted, happends while exiting the first loop*/
+    while((c = fgetc(ifp) != EOF) && (c != '\n')){
+        if (c == ','){
+            d++;
+        }
+    }
+    *out_d = d;
+    while(c = fgetc(ifp) != EOF){
+        if (c=='\n'){
+            n++;
+        }
+    }
+    *out_n = n;
+    return;
 }
 
 
-
-
-
-
-double* read_datapoints_from_file(FILE* ifp, int n, int d){
-    int i, j, c;
-    float f;
-    double* datapoints = malloc(sizeof(double)*n*d);
-    if (datapoints == NULL) {
-        printf("An Error Has Occurred\n");
-        /*need to close the file*/
-        exit(1); 
-    }  
+void read_datapoints_from_file(FILE* ifp, int n, int d, double* datapoints){
+    /*expected input:
+    ifp - an open file containing n*d doubles seperated by one char
+    n, d - ints representing the amount of doubles in the file, n*d
+    datapoints - an allocated n*d array of doubles
+    expected output:
+    the function fills "datapoints" with the values from the file    */
+    int i;
+    char c;
+    double val;
     for (i = 0; i < n*d ; i++){
-        scanf("%f%c", &f, &c);
-        datapoints[i] = f;
+        fscanf(ifp, "%lf%c", &val, &c);
+        datapoints[i] = val;
     }
-    return datapoints;
+    return;
 }
 
 
@@ -208,14 +225,26 @@ double* read_file_env(char* filename, int* out_n, int* out_d){
     output:
     an n*d array of soubles representing the datapoints red from the file,
     out_n and out_d will contain n and d as seen in the file*/
-    FILE* ifp = fopen(filename, "r");
     double* datapoints;
+    FILE* ifp = fopen(filename, "r");
     if (ifp == NULL){
         printf("An Error Has Occurred\n");
         exit(1);
     }
     extract_n_d(ifp, out_n, out_d);
-    datapoints = read_datapoints_from_file(ifp, *out_n, *out_d);
+    fclose(ifp);
+    datapoints = malloc(sizeof(double)*(*out_n)*(*out_d));
+    if (datapoints == NULL) {
+        printf("An Error Has Occurred\n");
+        exit(1);   
+    }
+    ifp = fopen(filename, "r");
+    if (ifp == NULL){
+        printf("An Error Has Occurred\n");
+        free(datapoints);
+        exit(1);
+    }
+    read_datapoints_from_file(ifp, *out_n, *out_d, datapoints);
     fclose(ifp);
     return datapoints;
 }

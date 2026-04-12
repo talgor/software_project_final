@@ -257,10 +257,23 @@ double* read_file_env(char* filename, int* out_n, int* out_d){
     return datapoints;
 }
 
-
 int main(int argc, char **argv)
 {
+    char* goal;
+    char* file_name;
     int k, d, n;
+    double* datapoints;
+    double* sym_matrix;
+    double* output_matrix;
+    if (argc != 3) {
+        printf("An Error Has Occurred\n");
+        exit(1);
+    }
+    goal = argv[1];
+    file_name = argv[2];
+    datapoints = read_file_env(file_name, &n, &d);
+    sym_matrix = compute_sym(datapoints, n, d);
+    /*switch case for what needs to be calculated and printed*/
 
 }
 

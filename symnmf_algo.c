@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
+#include <stdlib.h>
 
 double* compute_symnmf_env(double* W, double* H,  int n, int k, int max_iter);
 double* compute_symnmf(double* W, double* H,  int n, int k, int max_iter, double* new_H, double* numerator, double* denominator, double* transposed, double* denominator_part);
@@ -118,7 +120,6 @@ double* compute_sym(double* datapoints, int n, int d){
     if (sym_matrix == NULL) {
         printf("An Error Has Occurred\n");
         free(datapoints);
-        /*is this all there is to free know? i dont know :(*/
         exit(1); 
     }
     int i, j;
@@ -128,8 +129,8 @@ double* compute_sym(double* datapoints, int n, int d){
         for (j = 0; j < i; j++){
             sym_matrix[i*n + j] = sym_matrix[j*n + i];
         }
-        sym_matrix[i*n + j] = 0.0;
-        for (j++ ; j < n; j++){
+        sym_matrix[i*n + i] = 0.0;
+        for (j = i+1 ; j < n; j++){
             sym_calculus = squared_euclidean_distance(&datapoints[i*d], &datapoints[j*d], d);
             sym_calculus = exp(-sym_calculus/2);
             sym_matrix[i*n + j] = sym_calculus;
@@ -149,7 +150,6 @@ double* compute_ddg(double* sym_matrix, int n){
     if (ddg == NULL) {
         printf("An Error Has Occurred\n");
         free(sym_matrix);
-        /*is this all there is to free know? i dont know :(*/
         exit(1);   
     }
     double sum;
@@ -176,7 +176,6 @@ double* compute_norm(double* sym_matrix, int n){
     if (graph_laplacian == NULL) {
         printf("An Error Has Occurred\n");
         free(sym_matrix);
-        /*is this all there is to free know? i dont know :(*/
         exit(1);   
     }
     ddm = compute_ddg(sym_matrix, n);
@@ -194,13 +193,13 @@ void extract_n_d(FILE* ifp, int* out_n, int* out_d){
     the value in *out_n is the number of lines in the file */
     int d = 1;
     int c,  n = 1; /*the first line is not counted, happends while exiting the first loop*/
-    while((c = fgetc(ifp) != EOF) && (c != '\n')){
+    while(((c = fgetc(ifp)) != EOF) && (c != '\n')){
         if (c == ','){
             d++;
         }
     }
     *out_d = d;
-    while(c = fgetc(ifp) != EOF){
+    while((c = fgetc(ifp)) != EOF){
         if (c=='\n'){
             n++;
         }
@@ -260,8 +259,7 @@ double* read_file_env(char* filename, int* out_n, int* out_d){
 int main(int argc, char **argv)
 {
     char* goal;
-    char* file_name;
-    int k, d, n;
+    int d, n;
     double* datapoints;
     double* sym_matrix;
     double* output_matrix;
@@ -270,32 +268,28 @@ int main(int argc, char **argv)
         exit(1);
     }
     goal = argv[1];
-    file_name = argv[2];
-    datapoints = read_file_env(file_name, &n, &d);
+    datapoints = read_file_env(argv[2], &n, &d);
     sym_matrix = compute_sym(datapoints, n, d);
     free(datapoints);
-    if(goal = "sym\n"){
+    if(strcmp(goal, "sym") == 0){
         print_matrix(sym_matrix, n, n);
-        free(sym_matrix);
-        return;
     }
-    if(goal = "ddg\n"){
+    else if(strcmp(goal, "ddg") == 0){
         output_matrix = compute_ddg(sym_matrix, n);
-        free(sym_matrix);
-        print_matrix(output_matrix, n, n);
+        print_diag_matrix(output_matrix, n);
         free(output_matrix);
-        return;
     }
-    if(goal = "norm\n"){
+    else if(strcmp(goal, "norm") == 0){
         output_matrix = compute_norm(sym_matrix, n);
-        free(sym_matrix);
         print_matrix(output_matrix, n, n);
         free(output_matrix);
-        return;
     }
-    printf("An Error Has Occurred\n");
+    else{
+        printf("An Error Has Occurred\n");
+        free(sym_matrix);
+        exit(1);
+    }
     free(sym_matrix);
-    exit(1);
+    return 0;
 }
 
-/*in general, track the mallocs and the frees. complicated and inportatnt!*/

@@ -273,9 +273,29 @@ int main(int argc, char **argv)
     file_name = argv[2];
     datapoints = read_file_env(file_name, &n, &d);
     sym_matrix = compute_sym(datapoints, n, d);
-    /*switch case for what needs to be calculated and printed*/
-
+    free(datapoints);
+    if(goal = "sym\n"){
+        print_matrix(sym_matrix, n, n);
+        free(sym_matrix);
+        return;
+    }
+    if(goal = "ddg\n"){
+        output_matrix = compute_ddg(sym_matrix, n);
+        free(sym_matrix);
+        print_matrix(output_matrix, n, n);
+        free(output_matrix);
+        return;
+    }
+    if(goal = "norm\n"){
+        output_matrix = compute_norm(sym_matrix, n);
+        free(sym_matrix);
+        print_matrix(output_matrix, n, n);
+        free(output_matrix);
+        return;
+    }
+    printf("An Error Has Occurred\n");
+    free(sym_matrix);
+    exit(1);
 }
 
-
-/*after the function compute_sym, free the datapoints. in general, track the mallocs and the frees. complicated and inportatnt!*/
+/*in general, track the mallocs and the frees. complicated and inportatnt!*/

@@ -1,4 +1,4 @@
-import sys, math, numpy as np, c_symnmf
+import sys, math, numpy as np, mysymnmf as c_symnmf
 np.random.seed(1234)
 
 

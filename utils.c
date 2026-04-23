@@ -1,4 +1,4 @@
-#include "symnmf.h"
+#include "utils.h"
 
 /*
 Expected Input:

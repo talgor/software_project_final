@@ -9,7 +9,7 @@ n, d - pointers for updating the dimensions of the matrix
 Expected Output:
 A flat C double array representing the same matrix
 */
-static *double convert_to_c_array(PyObject *list, int* n, int* d) {
+static *double py_matrix_to_c(PyObject *list, int* n, int* d) {
     int i, j, rows, cols;
 
     int rows = (int)PyList_Size(list);
@@ -40,7 +40,7 @@ matrix - C double array representing a matrix of size rows x cols
 Expected Output:
 A Python list of lists representing the same matrix
 */
-static PyObject* convert_to_python_list(double *matrix, int rows, int cols) {
+static PyObject* array_to_py_matrix(double *matrix, int rows, int cols) {
     int i, j;
     PyObject *outer_list = PyList_New(rows);
     for (i = 0; i < rows; i++) {
@@ -60,7 +60,7 @@ diagonal - C double array representing the diagonal values of a diagonal matrix 
 Expected Output:
 A Python list of lists representing the same matrix
 */
-static PyObject* convert_to_python_list_diagonal(double *diagonal, int n) {
+static PyObject* diag_array_to_py_matrix(double *diagonal, int n) {
     int i, j;
     PyObject *outer_list = PyList_New(n);
     for (i = 0; i < n; i++) {

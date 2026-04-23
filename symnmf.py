@@ -6,16 +6,14 @@ def parse_file(file_name):
     datapoints = []
     with open(file_name, "r") as file:
         for line in file:
-            coaordinates = line.strip().split(",")
-            coaordinates = [float(co) for co in coaordinates]
-            datapoints.append(coaordinates)
+            coordinates = line.strip().split(",")
+            coordinates = [float(co) for co in coordinates]
+            datapoints.append(coordinates)
     return datapoints
 
 def initialize_H(W, k, n):
-    line_averages = [sum(line) / len(line) for line in W]
-    W_average = sum(line_averages) / len(line_averages)
-    initial_H = np.random.uniform(0, 2*math.sqrt(W_average/k), (k, n))
-    #is that what i want?
+    W_average = np.mean(W)
+    initial_H = np.random.uniform(0, 2*math.sqrt(W_average/k), (n, k)).tolist()
     return initial_H
 
 def print_matrix(matrix):
@@ -25,6 +23,7 @@ def print_matrix(matrix):
     return
 
 def compute_H(filename, k):
+    #a function for the anallysis file to use
     datapoints= parse_file(filename)
     W = c_symnmf.norm(datapoints)
     initial_H = initialize_H(W, k, len(datapoints))
@@ -49,7 +48,7 @@ def main():
     if goal == "symnmf":
         W = c_symnmf.norm(datapoints)
         initial_H = initialize_H(W, k, len(datapoints))
-        output_matrix = c_symnmf.symnmf(W, initial_H)
+        output_matrix = c_symnmf.symnmf(W, initial_H, len(datapoints), k)
 
     elif goal == "sym":
         output_matrix = c_symnmf.sym(datapoints)
@@ -73,7 +72,7 @@ if __name__ == "__main__":
     try:
         main()
     except Exception:
-        print("An Error Has Occured")
+        print("An Error Has Occurred")
         sys.exit(1)
 
 

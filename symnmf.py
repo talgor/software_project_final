@@ -27,7 +27,7 @@ def compute_H(filename, k):
     datapoints= parse_file(filename)
     W = c_symnmf.norm(datapoints)
     initial_H = initialize_H(W, k, len(datapoints))
-    return c_symnmf.symnmf(W, initial_H)
+    return c_symnmf.symnmf(W, initial_H, len(datapoints), k)
 
 
 def main():

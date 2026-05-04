@@ -6,7 +6,7 @@ static PyObject* norm(PyObject *self, PyObject *args);
 static PyObject* ddg(PyObject *self, PyObject *args);
 static PyObject* sym(PyObject *self, PyObject *args);
 static PyObject* symnmf(PyObject *self, PyObject *args);
-double* py_matrix_to_c(PyObject* matrix, int* n, int* d);
+static double* py_matrix_to_c(PyObject* matrix, int* n, int* d);
 static PyObject* array_to_py_matrix(double* c_array, int n, int d);
 static PyObject* diag_array_to_py_matrix(double* c_array, int n);
 
@@ -110,11 +110,11 @@ n, d - pointers for updating the dimensions of the matrix
 Expected Output:
 A flat C double array representing the same matrix
 */
-static *double py_matrix_to_c(PyObject *list, int* n, int* d) {
+static double* py_matrix_to_c(PyObject *list, int* n, int* d) {
     int i, j, rows, cols;
 
-    int rows = (int)PyList_Size(list);
-    int cols = (int)PyList_Size(PyList_GetItem(list, 0));
+    rows = (int)PyList_Size(list);
+    cols = (int)PyList_Size(PyList_GetItem(list, 0));
 
     *n = rows;
     *d = cols;

@@ -1,7 +1,7 @@
 import sys, math, numpy as np, mysymnmf as c_symnmf
 np.random.seed(1234)
 
-
+#parses the file and outputs a list of lists containing the datapoints
 def parse_file(file_name):
     datapoints = []
     with open(file_name, "r") as file:
@@ -11,11 +11,13 @@ def parse_file(file_name):
             datapoints.append(coordinates)
     return datapoints
 
+#initializes a randomized H matrix of the right dimentions
 def initialize_H(W, k, n):
     W_average = np.mean(W)
     initial_H = np.random.uniform(0, 2*math.sqrt(W_average/k), (n, k)).tolist()
     return initial_H
 
+#pretty prints a matrix
 def print_matrix(matrix):
     for line in matrix:
         formatted = (f"{c:.4f}" for c in line)

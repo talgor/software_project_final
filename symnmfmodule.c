@@ -10,8 +10,13 @@ static double* py_matrix_to_c(PyObject* matrix, int* n, int* d);
 static PyObject* array_to_py_matrix(double* c_array, int n, int d);
 static PyObject* diag_array_to_py_matrix(double* c_array, int n);
 
+/*
+Expected Input:
+PyObject containing a list of lists representing the datapoints
+Expected Output:
+A Python list of lists representing the norm matrix
+*/
 static PyObject* norm(PyObject *self, PyObject *args){
-    /*gets list of datapoints*/
     PyObject *py_datapoints;
     PyObject *py_norm_matrix;
     double* c_datapoints;
@@ -33,8 +38,13 @@ static PyObject* norm(PyObject *self, PyObject *args){
     return py_norm_matrix;
 }
 
+/*
+Expected Input:
+PyObject containing a list of lists representing the datapoints
+Expected Output:
+A Python list of lists representing the ddg matrix
+*/
 static PyObject* ddg(PyObject *self, PyObject *args){
-    /*gets list of datapoints*/
     PyObject *py_datapoints;
     PyObject *py_ddg_matrix;
     double* c_datapoints;
@@ -56,8 +66,13 @@ static PyObject* ddg(PyObject *self, PyObject *args){
     return py_ddg_matrix;
 }
 
+/*
+Expected Input:
+PyObject containing a list of lists representing the datapoints
+Expected Output:
+A Python list of lists representing the sym matrix
+*/
 static PyObject* sym(PyObject *self, PyObject *args){
-    /*gets list of datapoints*/
     PyObject *py_datapoints;
     PyObject *py_sym_matrix;
     double* c_datapoints;
@@ -76,9 +91,14 @@ static PyObject* sym(PyObject *self, PyObject *args){
     return py_sym_matrix;
 }
 
-
+/*
+Expected Input:
+PyObject containing a 2 lists of lists representing the matrixes W and initial H,
+tow ints representing the dimentions n and k
+Expected Output:
+A Python list of lists representing the norm matrix
+*/
 static PyObject* symnmf(PyObject *self, PyObject *args){
-    /*gets W and initial_H*/
     PyObject *py_W;
     PyObject *initial_H;
     PyObject *final_H;

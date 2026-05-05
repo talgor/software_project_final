@@ -118,14 +118,14 @@ double* compute_sym(double* datapoints, int n, int d){
     output:
     an n*n array representing the nXn similarity matrix A, as defined in the symnmf algorithm
     pay attention! the function allocates memory, the caller is resposible of freeing it*/
+    int i, j;
+    double sym_calculus;
     double* sym_matrix = malloc(sizeof(double)*n*n);
     if (sym_matrix == NULL) {
         printf("An Error Has Occurred\n");
         free(datapoints);
         exit(1); 
     }
-    int i, j;
-    double sym_calculus;
     /*filling the upper right triangle by calculation, the diagonal with 0 and the lower left by mirroring*/
     for (i = 0; i < n; i++){
         for (j = 0; j < i; j++){
@@ -148,14 +148,14 @@ double* compute_ddg(double* sym_matrix, int n){
     output:
     an n size array representing the diagonal of the diagonal degree matrix D
     pay attention! the function allocates memory, the caller is resposible of freeing it*/
+    double sum;
+    int i = 0, j;
     double* ddg = malloc(sizeof(double)*n);
     if (ddg == NULL) {
         printf("An Error Has Occurred\n");
         free(sym_matrix);
         exit(1);   
     }
-    double sum;
-    int i = 0, j;
     for(;i<n;i++){
         sum = 0.0;
         for(j=0; j<n; j++){

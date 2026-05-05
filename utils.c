@@ -52,9 +52,21 @@ Expected Output:
 None, prints the full n x n diagonal matrix, with diagonal elements from the 'diag' array and zeros elsewhere
 */
 void print_diag_matrix(double* diag, int n) {
-    int i;
+    int i, j;
     for (i = 0; i < n; i++) {
-        printf("%.4f\n", diag[i]);
+        j = 0;
+        for(j = 0; j < n; j++){
+            if (j == i){    
+                printf("%.4f", diag[i]);
+            }
+            else{
+                printf("%.4f", 0.0);
+            }
+            if(j < n-1){
+                printf(",");
+            }
+        }
+        printf("\n");
     }
 }
 

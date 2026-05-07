@@ -22,7 +22,7 @@ class Point:
 
     def distanceTo(self, otherPoint):
         if self.d != otherPoint.d:
-            raise ValueError("Points must have the same dimension to calculate distance.")
+            raise ValueError("An Error Has Occurred")
         return math.sqrt(sum((a - b) ** 2 for a, b in zip(self.coords, otherPoint.coords)))
 
 class CenterPoint:
@@ -42,7 +42,7 @@ class CenterPoint:
             squared_diff = (new_coords[-1] - self.coords[i]) ** 2
             sum_squared += squared_diff
         if len(new_coords) != self.d:
-            raise ValueError("Dimension mismatch when updating coordinates.")
+            raise ValueError("An Error Has Occurred")
         self.coords = tuple(new_coords)
         self.assignedPoints = []
         movement_distance = math.sqrt(sum_squared)
@@ -53,7 +53,7 @@ def updateAllPoints(points, centerPoints):
         try:
             point.updateClosestCenter(centerPoints)
         except Exception as e:
-            print(f"Error updating closest center for a point: {e}")
+            print("An Error Has Occurred")
             continue
         point.closestCenter.assignedPoints.append(point)
 
